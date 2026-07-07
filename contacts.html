@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- skill:chrome -->
+<style>
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
+</style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
+
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
+
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        document.body.appendChild(credit);
+
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
+
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chrome -->
+<!-- skill:libraries -->
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.383.0/dist/umd/lucide.min.js" integrity="sha384-wHFvAtjmgnkA2PJcMsDaCgdipf7X7YV44X/igbLHpvGiq6T5/PvFKl93grpvtbQT" crossorigin="anonymous"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>lucide.createIcons())</script>
+<!-- /skill:libraries -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacts — Email Sender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:oklch(97.5% 0.006 265);--surface:oklch(100% 0 0);--surface-2:oklch(98% 0.005 265);
+  --border:oklch(91% 0.008 265);--border-strong:oklch(85% 0.01 265);
+  --text:oklch(24% 0.02 265);--text-2:oklch(46% 0.015 265);--text-3:oklch(60% 0.012 265);
+  --primary:oklch(52% 0.19 268);--primary-hover:oklch(46% 0.19 268);--primary-soft:oklch(95% 0.03 268);
+  --success:oklch(58% 0.14 155);--success-soft:oklch(95% 0.04 155);
+  --danger:oklch(58% 0.18 25);--danger-soft:oklch(95% 0.04 25);
+  --warning:oklch(70% 0.14 65);--warning-soft:oklch(95% 0.05 75);
+  --radius:14px;--radius-sm:10px;
+  --shadow-sm:0 1px 2px oklch(30% 0.03 265 / 0.06),0 1px 3px oklch(30% 0.03 265 / 0.04);
+  --shadow-md:0 4px 12px oklch(30% 0.03 265 / 0.07),0 2px 4px oklch(30% 0.03 265 / 0.04);
+  --sidebar-w:250px;--ease-out:cubic-bezier(0.16,1,0.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.55}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;font-weight:700;line-height:1.2}
+a{color:inherit;text-decoration:none}
+.app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;min-height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:20px 22px;font-family:'Plus Jakarta Sans';font-weight:800;font-size:1.12rem;border-bottom:1px solid var(--border)}
+.sb-brand .logo{width:34px;height:34px;border-radius:9px;background:var(--primary);display:grid;place-items:center;color:#fff}
+.sb-nav{flex:1;padding:16px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.sb-nav .lbl{font-size:0.7rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text-3);padding:14px 12px 6px}
+.sb-nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);font-size:0.92rem;font-weight:500;color:var(--text-2);transition:all .15s var(--ease-out)}
+.sb-nav a:hover{background:var(--surface-2);color:var(--text)}
+.sb-nav a.active{background:var(--primary-soft);color:var(--primary-hover);font-weight:600}
+.sb-nav a i{width:18px;height:18px;flex-shrink:0}
+.sb-foot{padding:14px 12px;border-top:1px solid var(--border)}
+.sb-foot a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);font-size:0.92rem;font-weight:500;color:var(--danger)}
+.sb-foot a:hover{background:var(--danger-soft)}
+.main{display:flex;flex-direction:column;min-width:0}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}
+.tb-search{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;width:320px;max-width:38vw;color:var(--text-3)}
+.tb-search input{border:none;background:none;outline:none;font-family:'Inter';font-size:0.92rem;width:100%;color:var(--text)}
+.tb-right{display:flex;align-items:center;gap:8px}
+.icon-btn{position:relative;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--text-2);transition:all .15s}
+.icon-btn:hover{background:var(--surface-2);color:var(--text)}
+.icon-btn .badge{position:absolute;top:-5px;right:-5px;background:var(--danger);color:#fff;font-size:0.62rem;font-weight:700;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--surface)}
+.tb-user{display:flex;align-items:center;gap:10px;padding:5px 8px 5px 5px;border-radius:10px;cursor:pointer}
+.tb-user:hover{background:var(--surface-2)}
+.avatar{width:38px;height:38px;border-radius:9px;background:var(--primary);color:#fff;display:grid;place-items:center;font-family:'Plus Jakarta Sans';font-weight:700;font-size:0.85rem}
+.tb-user .nm{font-size:0.88rem;font-weight:600;line-height:1.2}
+.tb-user .rl{font-size:0.75rem;color:var(--text-3)}
+.content{padding:28px;max-width:1360px;width:100%}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+.page-head h1{font-size:1.7rem;font-weight:800;margin-bottom:4px}
+.page-head p{color:var(--text-2);font-size:0.96rem}
+.head-actions{display:flex;gap:10px;align-items:center}
+.menu-toggle{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--surface);place-items:center;cursor:pointer;color:var(--text-2)}
+.scrim{display:none;position:fixed;inset:0;background:oklch(20% 0.02 265 / 0.4);z-index:55}
+.scrim.show{display:block}
+.btn{display:inline-flex;align-items:center;gap:8px;justify-content:center;font-family:'Plus Jakarta Sans';font-weight:600;font-size:0.9rem;padding:10px 18px;border-radius:var(--radius-sm);border:1px solid transparent;cursor:pointer;transition:all .18s var(--ease-out)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-ghost{background:var(--surface);border-color:var(--border-strong);color:var(--text)}
+.btn-ghost:hover{background:var(--surface-2)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+
+/* stats */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:14px}
+.stat .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;flex-shrink:0}
+.ic.blue{background:var(--primary-soft);color:var(--primary)}.ic.green{background:var(--success-soft);color:var(--success)}
+.ic.amber{background:var(--warning-soft);color:var(--warning)}.ic.violet{background:oklch(94% 0.04 300);color:oklch(52% 0.2 300)}
+.stat .lbl{font-size:0.83rem;color:var(--text-2);font-weight:500}
+.stat .val{font-family:'Plus Jakarta Sans';font-weight:800;font-size:1.5rem;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+
+/* toolbar */
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.tool-search{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 14px;flex:1;min-width:220px;color:var(--text-3)}
+.tool-search input{border:none;background:none;outline:none;font-family:'Inter';font-size:0.9rem;width:100%;color:var(--text)}
+.toolbar select{padding:10px 36px 10px 14px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface);font-family:'Inter';font-size:0.9rem;color:var(--text);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+
+/* table */
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3);padding:14px 16px;background:var(--surface-2);border-bottom:1px solid var(--border)}
+td{padding:13px 16px;font-size:0.88rem;border-bottom:1px solid var(--border)}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:none}
+.chk{width:16px;height:16px;accent-color:var(--primary);cursor:pointer}
+.contact-cell{display:flex;align-items:center;gap:11px}
+.c-av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:'Plus Jakarta Sans';font-weight:700;font-size:0.78rem;flex-shrink:0}
+.c-name{font-weight:600;color:var(--text)}
+.c-email{font-size:0.82rem;color:var(--text-3)}
+.grp-tag{font-size:0.78rem;color:var(--text-2);background:var(--surface-2);padding:3px 10px;border-radius:100px;border:1px solid var(--border);font-weight:500}
+.badge-status{display:inline-flex;align-items:center;gap:6px;font-size:0.76rem;font-weight:600;padding:4px 10px;border-radius:100px}
+.badge-status.active{background:var(--success-soft);color:var(--success)}
+.badge-status.unsub{background:var(--danger-soft);color:var(--danger)}
+.badge-status.bounce{background:var(--warning-soft);color:var(--warning)}
+.badge-status .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.act-btns{display:flex;gap:6px}
+.act-btns button{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;display:grid;place-items:center}
+.act-btns button:hover{border-color:var(--primary);color:var(--primary)}
+.act-btns button.del:hover{border-color:var(--danger);color:var(--danger)}
+.tbl-foot{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;flex-wrap:wrap;gap:12px}
+.tbl-foot .info{font-size:0.85rem;color:var(--text-2)}
+.pager{display:flex;gap:5px}
+.pager button{min-width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;font-size:0.85rem;font-weight:500;padding:0 8px}
+.pager button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.pager button:hover:not(.active){background:var(--surface-2)}
+@media(max-width:1080px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:0;top:0;z-index:60;transform:translateX(-100%);transition:transform .3s var(--ease-out);width:250px}
+  .sidebar.open{transform:none;box-shadow:var(--shadow-md)}
+  .menu-toggle{display:grid}
+  .tb-search{display:none}
+  .table-scroll{overflow-x:auto}
+}
+@media(max-width:560px){.content{padding:18px}.stat-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sb-brand"><span class="logo"><i data-lucide="send" width="18" height="18"></i></span> Email Sender</a>
+    <nav class="sb-nav">
+      <div class="lbl">Main</div>
+      <a href="dashboard.html"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+      <a href="compose.html"><i data-lucide="pen-line"></i> Compose Email</a>
+      <a href="history.html"><i data-lucide="history"></i> Email History</a>
+      <div class="lbl">Manage</div>
+      <a href="groups.html"><i data-lucide="users"></i> Groups</a>
+      <a href="contacts.html" class="active"><i data-lucide="contact"></i> Contacts</a>
+      <a href="#"><i data-lucide="file-text"></i> Templates</a>
+      <a href="#"><i data-lucide="bar-chart-3"></i> Analytics</a>
+      <div class="lbl">Account</div>
+      <a href="#"><i data-lucide="settings"></i> Settings</a>
+      <a href="#"><i data-lucide="user"></i> Profile</a>
+    </nav>
+    <div class="sb-foot"><a href="login.html"><i data-lucide="log-out"></i> Logout</a></div>
+  </aside>
+  <div class="scrim" id="scrim" onclick="toggleSb()"></div>
+
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="menu-toggle" onclick="toggleSb()"><i data-lucide="menu" width="22" height="22"></i></button>
+        <div class="tb-search"><i data-lucide="search" width="18" height="18"></i><input placeholder="Search contacts..."></div>
+      </div>
+      <div class="tb-right">
+        <button class="icon-btn"><i data-lucide="mail-plus" width="19" height="19"></i></button>
+        <button class="icon-btn"><i data-lucide="bell" width="19" height="19"></i><span class="badge">3</span></button>
+        <div class="tb-user"><span class="avatar">JD</span><div><div class="nm">John Doe</div><div class="rl">Admin</div></div><i data-lucide="chevron-down" width="16" height="16" style="color:var(--text-3)"></i></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>Contacts</h1>
+          <p>Manage all your recipients across every group in one place.</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn btn-ghost"><i data-lucide="file-up" width="16" height="16"></i> Import CSV</button>
+          <button class="btn btn-primary"><i data-lucide="user-plus" width="16" height="16"></i> Add Contact</button>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><span class="ic blue"><i data-lucide="contact" width="22" height="22"></i></span><div><div class="lbl">Total Contacts</div><div class="val">3,245</div></div></div>
+        <div class="stat"><span class="ic green"><i data-lucide="check-circle" width="22" height="22"></i></span><div><div class="lbl">Active</div><div class="val">3,102</div></div></div>
+        <div class="stat"><span class="ic amber"><i data-lucide="alert-triangle" width="22" height="22"></i></span><div><div class="lbl">Bounced</div><div class="val">98</div></div></div>
+        <div class="stat"><span class="ic violet"><i data-lucide="user-x" width="22" height="22"></i></span><div><div class="lbl">Unsubscribed</div><div class="val">45</div></div></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="tool-search"><i data-lucide="search" width="17" height="17"></i><input placeholder="Search by name or email..."></div>
+        <select><option>All Groups</option><option>Students</option><option>Faculty</option><option>Employees</option><option>Clients</option></select>
+        <select><option>All Status</option><option>Active</option><option>Bounced</option><option>Unsubscribed</option></select>
+        <button class="btn btn-ghost"><i data-lucide="download" width="16" height="16"></i> Export</button>
+      </div>
+
+      <div class="panel">
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th style="width:40px"><input type="checkbox" class="chk"></th>
+              <th>Contact</th><th>Group</th><th>Added On</th><th>Emails Sent</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><input type="checkbox" class="chk"></td><td><div class="contact-cell"><span class="c-av" style="background:oklch(52% 0.19 268)">AS</span><div><div class="c-name">Ankit Sharma</div><div class="c-email">ankit.sharma@email.com</div></div></div></td><td><span class="grp-tag">Students</span></td><td>12 May, 2025</td><td>24</td><td><span class="badge-status active"><span class="dot"></span>Active</span></td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button class="del"><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td><input type="checkbox" class="chk"></td><td><div class="contact-cell"><span class="c-av" style="background:oklch(58% 0.14 155)">PV</span><div><div class="c-name">Priya Verma</div><div class="c-email">priya.verma@email.com</div></div></div></td><td><span class="grp-tag">Faculty</span></td><td>10 May, 2025</td><td>58</td><td><span class="badge-status active"><span class="dot"></span>Active</span></td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button class="del"><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td><input type="checkbox" class="chk"></td><td><div class="contact-cell"><span class="c-av" style="background:oklch(60% 0.18 25)">RK</span><div><div class="c-name">Rahul Kumar</div><div class="c-email">rahul.k@email.com</div></div></div></td><td><span class="grp-tag">Employees</span></td><td>09 May, 2025</td><td>12</td><td><span class="badge-status bounce"><span class="dot"></span>Bounced</span></td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button class="del"><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td><input type="checkbox" class="chk"></td><td><div class="contact-cell"><span class="c-av" style="background:oklch(60% 0.16 300)">SN</span><div><div class="c-name">Sneha Nair</div><div class="c-email">sneha.nair@email.com</div></div></div></td><td><span class="grp-tag">Clients</span></td><td>08 May, 2025</td><td>31</td><td><span class="badge-status active"><span class="dot"></span>Active</span></td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button class="del"><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td><input type="checkbox" class="chk"></td><td><div class="contact-cell"><span class="c-av" style="background:oklch(65% 0.16 45)">MG</span><div><div class="c-name">Manish Gupta</div><div class="c-email">manish.g@email.com</div></div></div></td><td><span class="grp-tag">Marketing</span></td><td>07 May, 2025</td><td>8</td><td><span class="badge-status unsub"><span class="dot"></span>Unsubscribed</span></td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button class="del"><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td><input type="checkbox" class="chk"></td><td><div class="contact-cell"><span class="c-av" style="background:oklch(55% 0.15 200)">DK</span><div><div class="c-name">Divya Kapoor</div><div class="c-email">divya.kapoor@email.com</div></div></div></td><td><span class="grp-tag">Students</span></td><td>06 May, 2025</td><td>19</td><td><span class="badge-status active"><span class="dot"></span>Active</span></td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button class="del"><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td><input type="checkbox" class="chk"></td><td><div class="contact-cell"><span class="c-av" style="background:oklch(52% 0.19 268)">VR</span><div><div class="c-name">Vikram Rao</div><div class="c-email">vikram.rao@email.com</div></div></div></td><td><span class="grp-tag">HR Team</span></td><td>05 May, 2025</td><td>42</td><td><span class="badge-status active"><span class="dot"></span>Active</span></td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button class="del"><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td><input type="checkbox" class="chk"></td><td><div class="contact-cell"><span class="c-av" style="background:oklch(58% 0.14 155)">AB</span><div><div class="c-name">Aisha Banerjee</div><div class="c-email">aisha.b@email.com</div></div></div></td><td><span class="grp-tag">Faculty</span></td><td>04 May, 2025</td><td>27</td><td><span class="badge-status active"><span class="dot"></span>Active</span></td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button class="del"><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tbl-foot">
+          <span class="info">Showing 1 to 8 of 3,245 contacts</span>
+          <div class="pager">
+            <button><i data-lucide="chevron-left" width="15" height="15"></i></button>
+            <button class="active">1</button><button>2</button><button>3</button><button>…</button><button>406</button>
+            <button><i data-lucide="chevron-right" width="15" height="15"></i></button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  if(window.lucide) lucide.createIcons();
+  function toggleSb(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('scrim').classList.toggle('show');}
+  // select-all
+  var head = document.querySelector('thead .chk');
+  if(head) head.addEventListener('change', function(){
+    document.querySelectorAll('tbody .chk').forEach(function(c){c.checked=head.checked;});
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- skill:chrome -->
+<style>
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
+</style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
+
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
+
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        document.body.appendChild(credit);
+
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
+
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chrome -->
+<!-- skill:libraries -->
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.383.0/dist/umd/lucide.min.js" integrity="sha384-wHFvAtjmgnkA2PJcMsDaCgdipf7X7YV44X/igbLHpvGiq6T5/PvFKl93grpvtbQT" crossorigin="anonymous"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>lucide.createIcons())</script>
+<!-- /skill:libraries -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compose Email — Email Sender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:oklch(97.5% 0.006 265);--surface:oklch(100% 0 0);--surface-2:oklch(98% 0.005 265);
+  --border:oklch(91% 0.008 265);--border-strong:oklch(85% 0.01 265);
+  --text:oklch(24% 0.02 265);--text-2:oklch(46% 0.015 265);--text-3:oklch(60% 0.012 265);
+  --primary:oklch(52% 0.19 268);--primary-hover:oklch(46% 0.19 268);--primary-soft:oklch(95% 0.03 268);
+  --success:oklch(58% 0.14 155);--success-soft:oklch(95% 0.04 155);
+  --danger:oklch(58% 0.18 25);--danger-soft:oklch(95% 0.04 25);
+  --warning:oklch(70% 0.14 65);--warning-soft:oklch(95% 0.05 75);
+  --radius:14px;--radius-sm:10px;
+  --shadow-sm:0 1px 2px oklch(30% 0.03 265 / 0.06),0 1px 3px oklch(30% 0.03 265 / 0.04);
+  --shadow-md:0 4px 12px oklch(30% 0.03 265 / 0.07),0 2px 4px oklch(30% 0.03 265 / 0.04);
+  --sidebar-w:250px;--ease-out:cubic-bezier(0.16,1,0.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.55}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;font-weight:700;line-height:1.2}
+a{color:inherit;text-decoration:none}
+.app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;min-height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:20px 22px;font-family:'Plus Jakarta Sans';font-weight:800;font-size:1.12rem;border-bottom:1px solid var(--border)}
+.sb-brand .logo{width:34px;height:34px;border-radius:9px;background:var(--primary);display:grid;place-items:center;color:#fff}
+.sb-nav{flex:1;padding:16px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.sb-nav .lbl{font-size:0.7rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text-3);padding:14px 12px 6px}
+.sb-nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);font-size:0.92rem;font-weight:500;color:var(--text-2);transition:all .15s var(--ease-out)}
+.sb-nav a:hover{background:var(--surface-2);color:var(--text)}
+.sb-nav a.active{background:var(--primary-soft);color:var(--primary-hover);font-weight:600}
+.sb-nav a i{width:18px;height:18px;flex-shrink:0}
+.sb-foot{padding:14px 12px;border-top:1px solid var(--border)}
+.sb-foot a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-sm);font-size:0.92rem;font-weight:500;color:var(--danger)}
+.sb-foot a:hover{background:var(--danger-soft)}
+.main{display:flex;flex-direction:column;min-width:0}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}
+.tb-search{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;width:320px;max-width:38vw;color:var(--text-3)}
+.tb-search input{border:none;background:none;outline:none;font-family:'Inter';font-size:0.92rem;width:100%;color:var(--text)}
+.tb-right{display:flex;align-items:center;gap:8px}
+.icon-btn{position:relative;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--text-2);transition:all .15s}
+.icon-btn:hover{background:var(--surface-2);color:var(--text)}
+.icon-btn .badge{position:absolute;top:-5px;right:-5px;background:var(--danger);color:#fff;font-size:0.62rem;font-weight:700;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--surface)}
+.tb-user{display:flex;align-items:center;gap:10px;padding:5px 8px 5px 5px;border-radius:10px;cursor:pointer}
+.tb-user:hover{background:var(--surface-2)}
+.avatar{width:38px;height:38px;border-radius:9px;background:var(--primary);color:#fff;display:grid;place-items:center;font-family:'Plus Jakarta Sans';font-weight:700;font-size:0.85rem}
+.tb-user .nm{font-size:0.88rem;font-weight:600;line-height:1.2}
+.tb-user .rl{font-size:0.75rem;color:var(--text-3)}
+.content{padding:28px;max-width:1360px;width:100%}
+.page-head{margin-bottom:24px}
+.page-head h1{font-size:1.7rem;font-weight:800;margin-bottom:4px}
+.page-head p{color:var(--text-2);font-size:0.96rem}
+.menu-toggle{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--surface);place-items:center;cursor:pointer;color:var(--text-2)}
+.scrim{display:none;position:fixed;inset:0;background:oklch(20% 0.02 265 / 0.4);z-index:55}
+.scrim.show{display:block}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.panel-head h3{font-size:1rem;font-weight:700}
+.panel-body{padding:20px}
+
+/* COMPOSE LAYOUT */
+.compose-grid{display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:0.86rem;font-weight:600;margin-bottom:7px}
+.field label .req{color:var(--danger)}
+.control,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font-family:'Inter';font-size:0.95rem;background:var(--surface);color:var(--text);transition:all .18s var(--ease-out)}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+.control:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+textarea{resize:vertical;min-height:180px;line-height:1.6}
+.recipient-tag{display:inline-flex;align-items:center;gap:9px;background:var(--primary-soft);color:var(--primary-hover);padding:8px 13px;border-radius:100px;font-size:0.86rem;font-weight:600;margin-top:10px}
+.recipient-tag .cnt{background:var(--primary);color:#fff;font-size:0.72rem;padding:2px 8px;border-radius:100px}
+
+/* toolbar */
+.editor-toolbar{display:flex;gap:2px;padding:8px;border:1px solid var(--border-strong);border-bottom:none;border-radius:var(--radius-sm) var(--radius-sm) 0 0;background:var(--surface-2)}
+.editor-toolbar button{width:34px;height:34px;border:none;background:none;border-radius:7px;cursor:pointer;color:var(--text-2);display:grid;place-items:center;transition:all .12s}
+.editor-toolbar button:hover{background:var(--surface);color:var(--text)}
+.editor-toolbar .sep{width:1px;background:var(--border);margin:5px 4px}
+.compose-grid textarea.body{border-radius:0 0 var(--radius-sm) var(--radius-sm)}
+
+/* dropzone */
+.dropzone{border:2px dashed var(--border-strong);border-radius:var(--radius-sm);padding:28px;text-align:center;color:var(--text-2);cursor:pointer;transition:all .18s var(--ease-out)}
+.dropzone:hover{border-color:var(--primary);background:var(--primary-soft)}
+.dropzone .ic{width:44px;height:44px;border-radius:11px;background:var(--surface-2);color:var(--primary);display:grid;place-items:center;margin:0 auto 12px}
+.dropzone strong{color:var(--text);font-weight:600}
+.dropzone small{display:block;margin-top:6px;font-size:0.8rem;color:var(--text-3)}
+.attach{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:12px}
+.attach .ft{width:38px;height:38px;border-radius:8px;background:var(--danger-soft);color:var(--danger);display:grid;place-items:center;font-size:0.68rem;font-weight:800;font-family:'Plus Jakarta Sans'}
+.attach .nm{font-weight:600;font-size:0.88rem;flex:1}
+.attach .sz{font-size:0.8rem;color:var(--text-3)}
+.attach .rm{color:var(--text-3);cursor:pointer;width:30px;height:30px;border-radius:7px;display:grid;place-items:center}
+.attach .rm:hover{background:var(--danger-soft);color:var(--danger)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* action bar */
+.action-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px;padding-top:20px;border-top:1px solid var(--border);flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;justify-content:center;font-family:'Plus Jakarta Sans';font-weight:600;font-size:0.92rem;padding:11px 20px;border-radius:var(--radius-sm);border:1px solid transparent;cursor:pointer;transition:all .18s var(--ease-out)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-ghost{background:var(--surface);border-color:var(--border-strong);color:var(--text)}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn-soft{background:var(--primary-soft);color:var(--primary-hover)}
+.btn-soft:hover{background:oklch(92% 0.04 268)}
+.action-group{display:flex;gap:10px}
+
+/* side summary */
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);font-size:0.9rem}
+.sum-row:last-child{border-bottom:none}
+.sum-row .k{color:var(--text-2)}
+.sum-row .v{font-weight:600}
+.smtp-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);font-size:0.9rem}
+.smtp-row:last-child{border-bottom:none}
+.smtp-row .k{color:var(--text-2)}
+.pill-ok{display:inline-flex;align-items:center;gap:6px;background:var(--success-soft);color:var(--success);font-size:0.78rem;font-weight:600;padding:4px 10px;border-radius:100px}
+.pill-ok .dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tips{list-style:none;display:flex;flex-direction:column;gap:11px}
+.tips li{display:flex;gap:10px;font-size:0.86rem;color:var(--text-2)}
+.tips li i{color:var(--primary);flex-shrink:0;margin-top:2px}
+.side-stack{display:flex;flex-direction:column;gap:18px;position:sticky;top:90px}
+
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:0.74rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-3);padding:0 16px 12px}
+td{padding:13px 16px;font-size:0.89rem;border-top:1px solid var(--border)}
+tbody tr:hover{background:var(--surface-2)}
+.subj{font-weight:600}
+.act-btns{display:flex;gap:6px}
+.act-btns button{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);cursor:pointer;display:grid;place-items:center}
+.act-btns button:hover{border-color:var(--primary);color:var(--primary)}
+
+@media(max-width:1080px){.compose-grid{grid-template-columns:1fr}.side-stack{position:static}}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:0;top:0;z-index:60;transform:translateX(-100%);transition:transform .3s var(--ease-out);width:250px}
+  .sidebar.open{transform:none;box-shadow:var(--shadow-md)}
+  .menu-toggle{display:grid}
+  .tb-search{display:none}
+}
+@media(max-width:560px){.content{padding:18px}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sb-brand"><span class="logo"><i data-lucide="send" width="18" height="18"></i></span> Email Sender</a>
+    <nav class="sb-nav">
+      <div class="lbl">Main</div>
+      <a href="dashboard.html"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+      <a href="compose.html" class="active"><i data-lucide="pen-line"></i> Compose Email</a>
+      <a href="history.html"><i data-lucide="history"></i> Email History</a>
+      <div class="lbl">Manage</div>
+      <a href="groups.html"><i data-lucide="users"></i> Groups</a>
+      <a href="contacts.html"><i data-lucide="contact"></i> Contacts</a>
+      <a href="#"><i data-lucide="file-text"></i> Templates</a>
+      <a href="#"><i data-lucide="bar-chart-3"></i> Analytics</a>
+      <div class="lbl">Account</div>
+      <a href="#"><i data-lucide="settings"></i> Settings</a>
+      <a href="#"><i data-lucide="user"></i> Profile</a>
+    </nav>
+    <div class="sb-foot"><a href="login.html"><i data-lucide="log-out"></i> Logout</a></div>
+  </aside>
+  <div class="scrim" id="scrim" onclick="toggleSb()"></div>
+
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="menu-toggle" onclick="toggleSb()"><i data-lucide="menu" width="22" height="22"></i></button>
+        <div class="tb-search"><i data-lucide="search" width="18" height="18"></i><input placeholder="Search..."></div>
+      </div>
+      <div class="tb-right">
+        <button class="icon-btn"><i data-lucide="mail-plus" width="19" height="19"></i></button>
+        <button class="icon-btn"><i data-lucide="bell" width="19" height="19"></i><span class="badge">3</span></button>
+        <div class="tb-user"><span class="avatar">JD</span><div><div class="nm">John Doe</div><div class="rl">Admin</div></div><i data-lucide="chevron-down" width="16" height="16" style="color:var(--text-3)"></i></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <h1>Compose Bulk Email</h1>
+        <p>Create one email and send it securely to an entire group using Gmail SMTP.</p>
+      </div>
+
+      <div class="compose-grid">
+        <!-- MAIN FORM -->
+        <div class="panel">
+          <div class="panel-body">
+            <div class="field">
+              <label>Select Group <span class="req">*</span></label>
+              <select>
+                <option>Students Group (245 members)</option>
+                <option>Faculty Members (58 members)</option>
+                <option>Final Year Students (85 members)</option>
+                <option>All Company Employees (120 members)</option>
+                <option>Clients (310 members)</option>
+              </select>
+              <div class="recipient-tag"><i data-lucide="users" width="15" height="15"></i> Students Group <span class="cnt">245 members</span></div>
+            </div>
+
+            <div class="field">
+              <label>Subject <span class="req">*</span></label>
+              <input class="control" placeholder="Enter email subject" value="Holiday Announcement - Summer Break 2025">
+            </div>
+
+            <div class="field">
+              <label>Email Message <span class="req">*</span></label>
+              <div class="editor-toolbar">
+                <button title="Bold"><i data-lucide="bold" width="16" height="16"></i></button>
+                <button title="Italic"><i data-lucide="italic" width="16" height="16"></i></button>
+                <button title="Underline"><i data-lucide="underline" width="16" height="16"></i></button>
+                <span class="sep"></span>
+                <button title="Bullet list"><i data-lucide="list" width="16" height="16"></i></button>
+                <button title="Numbered list"><i data-lucide="list-ordered" width="16" height="16"></i></button>
+                <span class="sep"></span>
+                <button title="Link"><i data-lucide="link" width="16" height="16"></i></button>
+                <button title="Image"><i data-lucide="image" width="16" height="16"></i></button>
+                <button title="Align"><i data-lucide="align-left" width="16" height="16"></i></button>
+              </div>
+              <textarea class="body">Dear Students,
+
+We are pleased to announce the summer break schedule for 2025. The campus will remain closed from June 1st to July 15th.
+
+Please ensure all pending assignments are submitted before the break begins.
+
+Best regards,
+Administration Team</textarea>
+            </div>
+
+            <div class="field">
+              <label>Attachments</label>
+              <div class="dropzone">
+                <div class="ic"><i data-lucide="upload-cloud" width="22" height="22"></i></div>
+                <strong>Drag &amp; drop files here or click to upload</strong>
+                <small>Supported: PDF, DOCX, Images, PPT, Excel (Max 25MB)</small>
+              </div>
+              <div class="attach">
+                <span class="ft">PDF</span>
+                <span class="nm">notice.pdf</span>
+                <span class="sz">245 KB</span>
+                <span class="rm"><i data-lucide="x" width="16" height="16"></i></span>
+              </div>
+            </div>
+
+            <div class="two">
+              <div class="field" style="margin-bottom:0">
+                <label>Priority</label>
+                <select><option>Normal</option><option>High</option><option>Low</option></select>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Schedule Email (Optional)</label>
+                <input class="control" type="datetime-local">
+              </div>
+            </div>
+
+            <div class="action-bar">
+              <button class="btn btn-ghost"><i data-lucide="eye" width="17" height="17"></i> Preview Email</button>
+              <div class="action-group">
+                <button class="btn btn-ghost">Cancel</button>
+                <button class="btn btn-soft"><i data-lucide="save" width="17" height="17"></i> Save Draft</button>
+                <button class="btn btn-primary" onclick="sendMail(this)"><i data-lucide="send" width="17" height="17"></i> Send Email</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDE -->
+        <div class="side-stack">
+          <div class="panel">
+            <div class="panel-head"><h3>Email Summary</h3></div>
+            <div class="panel-body">
+              <div class="sum-row"><span class="k">Selected Group</span><span class="v">Students</span></div>
+              <div class="sum-row"><span class="k">Recipients</span><span class="v">245</span></div>
+              <div class="sum-row"><span class="k">Attachments</span><span class="v">1</span></div>
+              <div class="sum-row"><span class="k">Priority</span><span class="v">Normal</span></div>
+              <div class="sum-row"><span class="k">Est. Delivery</span><span class="v" style="color:var(--success)">&lt; 30 seconds</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>SMTP Status</h3></div>
+            <div class="panel-body">
+              <div class="smtp-row"><span class="k">Connection</span><span class="pill-ok"><span class="dot"></span>Connected</span></div>
+              <div class="smtp-row"><span class="k">Provider</span><span class="v">Gmail SMTP</span></div>
+              <div class="smtp-row"><span class="k">Status</span><span class="v" style="color:var(--success)">Ready to Send</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>Tips</h3></div>
+            <div class="panel-body">
+              <ul class="tips">
+                <li><i data-lucide="check-circle" width="17" height="17"></i> Double-check recipients before sending.</li>
+                <li><i data-lucide="check-circle" width="17" height="17"></i> Attachments should be below 25MB.</li>
+                <li><i data-lucide="check-circle" width="17" height="17"></i> Preview your email before sending.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT DRAFTS -->
+      <div class="panel" style="margin-top:18px">
+        <div class="panel-head"><h3>Recent Drafts</h3><a href="#" style="font-size:0.85rem;color:var(--primary);font-weight:600">View All</a></div>
+        <div class="panel-body" style="padding:8px 4px">
+          <table>
+            <thead><tr><th>Subject</th><th>Group</th><th>Last Edited</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="subj">Holiday Notice</td><td>Students</td><td>Yesterday, 10:30 AM</td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td class="subj">Placement Drive</td><td>Final Year Students</td><td>2 Days Ago, 04:15 PM</td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+              <tr><td class="subj">Exam Schedule</td><td>All Students</td><td>3 Days Ago, 11:20 AM</td><td><div class="act-btns"><button><i data-lucide="pencil" width="15" height="15"></i></button><button><i data-lucide="trash-2" width="15" height="15"></i></button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  if(window.lucide) lucide.createIcons();
+  function toggleSb(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('scrim').classList.toggle('show');}
+  function sendMail(btn){
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<i data-lucide="loader-2" width="17" height="17"></i> Sending...';
+    btn.style.opacity='.75';btn.disabled=true;
+    if(window.lucide) lucide.createIcons();
+    var spin = btn.querySelector('i'); if(spin) spin.style.animation='spin 0.8s linear infinite';
+    setTimeout(function(){
+      btn.innerHTML='<i data-lucide="check" width="17" height="17"></i> Sent!';
+      btn.style.background='var(--success)';btn.style.opacity='1';
+      if(window.lucide) lucide.createIcons();
+      setTimeout(function(){btn.innerHTML=orig;btn.style.background='';btn.disabled=false;if(window.lucide)lucide.createIcons();},1800);
+    },1600);
+  }
+  var st=document.createElement('style');st.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(st);
+</script>
+</body>
+</html>

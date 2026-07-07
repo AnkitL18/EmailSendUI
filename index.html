@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- skill:chrome -->
+<style>
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
+</style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
+
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
+
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        document.body.appendChild(credit);
+
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
+
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chrome -->
+<!-- skill:libraries -->
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.383.0/dist/umd/lucide.min.js" integrity="sha384-wHFvAtjmgnkA2PJcMsDaCgdipf7X7YV44X/igbLHpvGiq6T5/PvFKl93grpvtbQT" crossorigin="anonymous"></script>
+<script>document.addEventListener("DOMContentLoaded",()=>lucide.createIcons())</script>
+<!-- /skill:libraries -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Sender — Bulk Email Management Made Simple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: oklch(99% 0.004 265);
+  --surface: oklch(100% 0 0);
+  --surface-2: oklch(97.5% 0.006 265);
+  --surface-3: oklch(95% 0.008 265);
+  --border: oklch(91% 0.008 265);
+  --border-strong: oklch(85% 0.01 265);
+  --text: oklch(24% 0.02 265);
+  --text-2: oklch(46% 0.015 265);
+  --text-3: oklch(60% 0.012 265);
+  --primary: oklch(52% 0.19 268);
+  --primary-hover: oklch(46% 0.19 268);
+  --primary-soft: oklch(95% 0.03 268);
+  --primary-tint: oklch(97% 0.018 268);
+  --accent: oklch(72% 0.15 195);
+  --success: oklch(62% 0.15 155);
+  --warning: oklch(72% 0.15 65);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 2px oklch(30% 0.03 265 / 0.06), 0 1px 3px oklch(30% 0.03 265 / 0.05);
+  --shadow-md: 0 4px 12px oklch(30% 0.03 265 / 0.08), 0 2px 4px oklch(30% 0.03 265 / 0.05);
+  --shadow-lg: 0 24px 48px oklch(30% 0.05 265 / 0.14), 0 8px 16px oklch(30% 0.04 265 / 0.08);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --maxw: 1200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',system-ui,sans-serif;text-wrap:balance;line-height:1.15;letter-spacing:-0.02em;font-weight:800}
+p{text-wrap:pretty}
+a{color:inherit;text-decoration:none}
+/* Global safety: lucide replaces <i> with <svg>; keep every icon inside its box */
+svg[class*="lucide"]{flex-shrink:0;display:block}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--primary)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;justify-content:center;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:0.95rem;
+  padding:12px 22px;border-radius:var(--radius-sm);border:1px solid transparent;
+  cursor:pointer;transition:all .2s var(--ease-out);white-space:nowrap;
+}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow-sm)}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--border-strong)}
+.btn-ghost:hover{background:var(--surface-2);border-color:var(--text-3)}
+.btn-lg{padding:15px 28px;font-size:1.02rem}
+
+/* NAV */
+header{position:sticky;top:0;z-index:50;background:oklch(99% 0.004 265 / 0.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-0.02em}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:var(--primary);display:grid;place-items:center;color:#fff;flex-shrink:0}
+.nav-links{display:flex;gap:30px;font-size:0.94rem;font-weight:500;color:var(--text-2)}
+.nav-links a{transition:color .15s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;align-items:center;gap:12px}
+.nav-cta a.login{font-weight:600;font-size:0.94rem;padding:8px 4px}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text)}
+
+/* HERO */
+.hero{padding:76px 0 90px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 55% at 78% 8%, var(--primary-tint), transparent 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1.15fr;gap:56px;align-items:center;position:relative}
+.hero .pill{display:inline-flex;align-items:center;gap:8px;background:var(--primary-soft);color:var(--primary-hover);font-size:0.82rem;font-weight:600;padding:6px 13px;border-radius:100px;margin-bottom:22px}
+.hero .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--primary)}
+.hero h1{font-size:clamp(2.4rem,4.6vw,3.7rem);margin-bottom:20px}
+.hero h1 .grad{color:var(--primary)}
+.hero p.lead{font-size:1.15rem;color:var(--text-2);max-width:52ch;margin-bottom:32px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:30px}
+.hero-badges{display:flex;gap:22px;flex-wrap:wrap;color:var(--text-2);font-size:0.9rem;font-weight:500}
+.hero-badges span{display:flex;align-items:center;gap:7px}
+.hero-badges i,.hero-badges svg{color:var(--success)}
+
+/* DASHBOARD MOCKUP */
+.mock{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden}
+.mock-top{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.mock-top .d{width:11px;height:11px;border-radius:50%;background:var(--border-strong)}
+.mock-top .d:nth-child(1){background:oklch(72% 0.15 25)}
+.mock-top .d:nth-child(2){background:var(--warning)}
+.mock-top .d:nth-child(3){background:var(--success)}
+.mock-top .url{margin-left:12px;font-size:0.76rem;color:var(--text-3);font-family:'Inter';background:var(--surface);border:1px solid var(--border);padding:3px 12px;border-radius:6px}
+.mock-body{display:grid;grid-template-columns:150px 1fr}
+.mock-side{background:var(--surface-2);border-right:1px solid var(--border);padding:18px 12px;overflow:hidden}
+.mock-side .mb-brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.82rem;font-family:'Plus Jakarta Sans';margin-bottom:18px;padding:0 6px}
+.mock-side .mb-brand .lg{width:22px;height:22px;border-radius:6px;background:var(--primary);display:grid;place-items:center;color:#fff;flex-shrink:0}
+.mock-nav a{display:flex;align-items:center;gap:9px;font-size:0.8rem;color:var(--text-2);padding:8px 10px;border-radius:8px;margin-bottom:2px;font-weight:500;white-space:nowrap;overflow:hidden}
+.mock-nav a.active{background:var(--primary-soft);color:var(--primary-hover);font-weight:600}
+/* target both the pre-render <i> and the post-render <svg> so icons never blow up */
+.mock-nav a i,.mock-nav a svg{width:15px !important;height:15px !important;flex-shrink:0}
+.mock-main{padding:20px;min-width:0}
+.mock-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat-card{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:13px;overflow:hidden}
+.stat-card .lbl{font-size:0.68rem;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+.stat-card .val{font-family:'Plus Jakarta Sans';font-weight:800;font-size:1.3rem;margin-top:4px;font-variant-numeric:tabular-nums}
+.stat-card .val.accent{color:var(--primary)}
+.mock-chart{background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:16px}
+.mock-chart .ch-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.mock-chart .ch-head .t{font-weight:700;font-size:0.85rem;font-family:'Plus Jakarta Sans'}
+.mock-chart .legend{display:flex;gap:12px;font-size:0.72rem;color:var(--text-2)}
+.mock-chart .legend span{display:flex;align-items:center;gap:5px}
+.mock-chart .legend .sw{width:9px;height:9px;border-radius:2px}
+/* grouped bars — sent + delivered side by side, no overlap */
+.bars{display:flex;align-items:flex-end;gap:12px;height:96px}
+.bar-col{flex:1;display:flex;flex-direction:row;align-items:flex-end;justify-content:center;gap:4px;height:100%}
+.bar{width:9px;border-radius:3px 3px 0 0}
+.bar.sent{background:var(--primary)}
+.bar.deliv{background:oklch(80% 0.09 268)}
+
+/* MARQUEE STATS */
+.stripbar{background:var(--text);color:oklch(96% 0.01 265)}
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:38px 0}
+.strip .item{text-align:center}
+.strip .num{font-family:'Plus Jakarta Sans';font-weight:800;font-size:2.2rem;color:#fff;letter-spacing:-0.03em}
+.strip .cap{font-size:0.88rem;color:oklch(75% 0.02 265);margin-top:2px}
+
+/* SECTION */
+section.block{padding:92px 0}
+.sec-head{max-width:60ch;margin:0 auto 56px;text-align:center}
+.sec-head .eyebrow{display:block;margin-bottom:14px}
+.sec-head h2{font-size:clamp(1.9rem,3.2vw,2.6rem);margin-bottom:16px}
+.sec-head p{color:var(--text-2);font-size:1.08rem}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.feat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;transition:all .25s var(--ease-out)}
+.feat:hover{border-color:var(--border-strong);box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.feat .ic{width:48px;height:48px;border-radius:12px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;margin-bottom:18px}
+.feat h3{font-size:1.18rem;margin-bottom:9px;font-weight:700}
+.feat p{color:var(--text-2);font-size:0.96rem}
+
+/* HOW IT WORKS */
+.steps{background:var(--surface-2)}
+.step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.step{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 26px}
+.step .no{font-family:'Plus Jakarta Sans';font-weight:800;font-size:1rem;width:38px;height:38px;border-radius:10px;background:var(--primary);color:#fff;display:grid;place-items:center;margin-bottom:16px}
+.step h3{font-size:1.12rem;margin-bottom:7px;font-weight:700}
+.step p{color:var(--text-2);font-size:0.95rem}
+
+/* DASHBOARD SECTION */
+.dash-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:56px;align-items:center}
+.dash-copy h2{font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:22px}
+.dash-list{list-style:none;display:flex;flex-direction:column;gap:16px;margin-bottom:30px}
+.dash-list li{display:flex;gap:13px;align-items:flex-start;color:var(--text-2);font-size:1.02rem}
+.dash-list li i,.dash-list li svg{color:var(--primary);flex-shrink:0;margin-top:3px}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.why{text-align:left}
+.why .ic{width:46px;height:46px;border-radius:12px;background:var(--surface);border:1px solid var(--border);color:var(--primary);display:grid;place-items:center;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.why h3{font-size:1.1rem;margin-bottom:8px;font-weight:700}
+.why p{color:var(--text-2);font-size:0.95rem}
+
+/* TESTIMONIALS */
+.tst{background:var(--surface-2)}
+.tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.quote{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+.quote .stars{display:flex;gap:2px;color:var(--warning);margin-bottom:14px}
+.quote p{font-size:1.02rem;color:var(--text);margin-bottom:22px;line-height:1.55}
+.quote .who{display:flex;align-items:center;gap:12px}
+.quote .av{width:44px;height:44px;border-radius:50%;background:var(--primary-soft);color:var(--primary-hover);display:grid;place-items:center;font-weight:700;font-family:'Plus Jakarta Sans';font-size:0.9rem}
+.quote .who .nm{font-weight:700;font-size:0.94rem}
+.quote .who .rl{font-size:0.84rem;color:var(--text-3)}
+
+/* CTA */
+.cta{background:var(--primary);color:#fff;border-radius:24px;padding:64px 48px;text-align:center;position:relative;overflow:hidden}
+.cta::after{content:"";position:absolute;inset:0;background:radial-gradient(50% 120% at 50% 0%, oklch(100% 0 0 / 0.12), transparent 60%)}
+.cta h2{font-size:clamp(1.9rem,3.4vw,2.7rem);margin-bottom:16px;position:relative}
+.cta p{font-size:1.1rem;color:oklch(94% 0.03 268);max-width:52ch;margin:0 auto 30px;position:relative}
+.cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+.cta .btn-primary{background:#fff;color:var(--primary-hover)}
+.cta .btn-primary:hover{background:oklch(96% 0.02 268)}
+.cta .btn-ghost{color:#fff;border-color:oklch(100% 0 0 / 0.4)}
+.cta .btn-ghost:hover{background:oklch(100% 0 0 / 0.12)}
+
+/* FAQ */
+.faq-wrap{max-width:760px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{width:100%;background:none;border:none;text-align:left;cursor:pointer;padding:22px 4px;display:flex;justify-content:space-between;align-items:center;gap:20px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:1.08rem;color:var(--text)}
+.faq-q i,.faq-q svg{color:var(--text-3);transition:transform .3s var(--ease-out);flex-shrink:0}
+.faq-item.open .faq-q i,.faq-item.open .faq-q svg{transform:rotate(45deg);color:var(--primary)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s var(--ease-out)}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a-inner{overflow:hidden}
+.faq-a p{color:var(--text-2);padding:0 4px 22px;font-size:1rem}
+
+/* FOOTER */
+footer{background:var(--text);color:oklch(80% 0.015 265);padding:64px 0 32px}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;padding-bottom:44px;border-bottom:1px solid oklch(35% 0.015 265)}
+.foot-brand .brand{color:#fff;margin-bottom:16px}
+.foot-brand p{font-size:0.95rem;max-width:34ch;color:oklch(72% 0.015 265)}
+.foot-col h4{color:#fff;font-size:0.92rem;font-weight:700;margin-bottom:16px;letter-spacing:0.02em}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.foot-col a{font-size:0.92rem;color:oklch(74% 0.015 265);transition:color .15s}
+.foot-col a:hover{color:#fff}
+.foot-bot{padding-top:28px;font-size:0.88rem;color:oklch(65% 0.015 265);text-align:center}
+
+/* ANIMATION */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+.reveal.in{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .hero-grid,.dash-grid{grid-template-columns:1fr;gap:40px}
+  .feat-grid,.step-grid,.tst-grid{grid-template-columns:repeat(2,1fr)}
+  .why-grid{grid-template-columns:repeat(2,1fr)}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .strip{grid-template-columns:repeat(2,1fr);gap:32px 16px}
+}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .nav-cta .login{display:none}
+  .menu-btn{display:grid;place-items:center}
+  .feat-grid,.step-grid,.tst-grid,.why-grid{grid-template-columns:1fr}
+  .mock-body{grid-template-columns:1fr}
+  .mock-side{display:none}
+  .mock-stats{grid-template-columns:repeat(2,1fr)}
+  section.block{padding:64px 0}
+  .cta{padding:48px 24px;border-radius:18px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a href="index.html" class="brand"><span class="logo"><i data-lucide="send" width="18" height="18"></i></span> Email Sender</a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How It Works</a>
+        <a href="#templates">Templates</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="nav-cta">
+        <a href="login.html" class="login">Login</a>
+        <a href="login.html" class="btn btn-primary">Get Started</a>
+        <button class="menu-btn" aria-label="Menu"><i data-lucide="menu" width="24" height="24"></i></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="reveal">
+      <span class="pill"><span class="dot"></span> Powerful Bulk Email Management</span>
+      <h1>Send Emails to Many, <span class="grad">Easily and Securely</span></h1>
+      <p class="lead">Email Sender helps you create groups, compose emails, send to hundreds of recipients, and track delivery in real time.</p>
+      <div class="hero-actions">
+        <a href="login.html" class="btn btn-primary btn-lg">Get Started Free <i data-lucide="arrow-right" width="18" height="18"></i></a>
+        <a href="login.html" class="btn btn-ghost btn-lg">Login to Account</a>
+      </div>
+      <div class="hero-badges">
+        <span><i data-lucide="check-circle" width="17" height="17"></i> Easy to Use</span>
+        <span><i data-lucide="check-circle" width="17" height="17"></i> Secure SMTP</span>
+        <span><i data-lucide="check-circle" width="17" height="17"></i> High Delivery Rate</span>
+      </div>
+    </div>
+    <div class="reveal mock" style="transition-delay:.1s">
+      <div class="mock-top">
+        <span class="d"></span><span class="d"></span><span class="d"></span>
+        <span class="url">app.emailsender.io/dashboard</span>
+      </div>
+      <div class="mock-body">
+        <aside class="mock-side">
+          <div class="mb-brand"><span class="lg"><i data-lucide="send" width="12" height="12"></i></span> Email Sender</div>
+          <nav class="mock-nav">
+            <a class="active"><i data-lucide="layout-dashboard" width="15" height="15"></i> Dashboard</a>
+            <a><i data-lucide="pen-line" width="15" height="15"></i> Compose</a>
+            <a><i data-lucide="users" width="15" height="15"></i> Groups</a>
+            <a><i data-lucide="contact" width="15" height="15"></i> Contacts</a>
+            <a><i data-lucide="history" width="15" height="15"></i> History</a>
+            <a><i data-lucide="file-text" width="15" height="15"></i> Templates</a>
+            <a><i data-lucide="bar-chart-3" width="15" height="15"></i> Analytics</a>
+          </nav>
+        </aside>
+        <div class="mock-main">
+          <div class="mock-stats">
+            <div class="stat-card"><div class="lbl">Total Emails</div><div class="val">12,458</div></div>
+            <div class="stat-card"><div class="lbl">Total Groups</div><div class="val">24</div></div>
+            <div class="stat-card"><div class="lbl">Contacts</div><div class="val">3,245</div></div>
+            <div class="stat-card"><div class="lbl">Delivery</div><div class="val accent">98.7%</div></div>
+          </div>
+          <div class="mock-chart">
+            <div class="ch-head">
+              <span class="t">Email Statistics</span>
+              <div class="legend">
+                <span><span class="sw" style="background:var(--primary)"></span>Sent</span>
+                <span><span class="sw" style="background:oklch(80% 0.09 268)"></span>Delivered</span>
+              </div>
+            </div>
+            <div class="bars">
+              <div class="bar-col"><div class="bar sent" style="height:78%"></div><div class="bar deliv" style="height:72%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:64%"></div><div class="bar deliv" style="height:58%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:88%"></div><div class="bar deliv" style="height:82%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:52%"></div><div class="bar deliv" style="height:48%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:94%"></div><div class="bar deliv" style="height:90%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:70%"></div><div class="bar deliv" style="height:66%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:82%"></div><div class="bar deliv" style="height:78%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STAT STRIP -->
+<div class="stripbar">
+  <div class="wrap strip">
+    <div class="item"><div class="num">500+</div><div class="cap">Organizations</div></div>
+    <div class="item"><div class="num">100K+</div><div class="cap">Emails Delivered</div></div>
+    <div class="item"><div class="num">99%</div><div class="cap">Delivery Success</div></div>
+    <div class="item"><div class="num">24/7</div><div class="cap">System Availability</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="block" id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Features</span>
+      <h2>Everything You Need to Manage Bulk Emails</h2>
+      <p>All the tools you need to send, manage, and track emails effortlessly.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal"><div class="ic"><i data-lucide="mail-plus"></i></div><h3>Bulk Email Sending</h3><p>Send emails to hundreds of recipients with just one click.</p></div>
+      <div class="feat reveal" style="transition-delay:.05s"><div class="ic"><i data-lucide="users"></i></div><h3>Group Management</h3><p>Create unlimited groups and organize your contacts easily.</p></div>
+      <div class="feat reveal" style="transition-delay:.1s"><div class="ic"><i data-lucide="file-spreadsheet"></i></div><h3>CSV Import</h3><p>Import contacts in bulk using CSV files in just a few seconds.</p></div>
+      <div class="feat reveal"><div class="ic"><i data-lucide="paperclip"></i></div><h3>Attachments</h3><p>Attach PDFs, images, and documents and send them securely.</p></div>
+      <div class="feat reveal" style="transition-delay:.05s"><div class="ic"><i data-lucide="line-chart"></i></div><h3>Analytics</h3><p>Track email delivery, opens, failures, and overall performance.</p></div>
+      <div class="feat reveal" style="transition-delay:.1s"><div class="ic"><i data-lucide="shield-check"></i></div><h3>Secure SMTP</h3><p>Integrated with Gmail SMTP for secure and reliable delivery.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="block steps" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">How It Works</span>
+      <h2>Simple Steps to Send Bulk Emails</h2>
+      <p>Get started in minutes and send emails to your entire audience.</p>
+    </div>
+    <div class="step-grid">
+      <div class="step reveal"><div class="no">1</div><h3>Login</h3><p>Login to your account securely.</p></div>
+      <div class="step reveal" style="transition-delay:.05s"><div class="no">2</div><h3>Create Group</h3><p>Create a group and add your contacts.</p></div>
+      <div class="step reveal" style="transition-delay:.1s"><div class="no">3</div><h3>Add Members</h3><p>Add members manually or import via CSV.</p></div>
+      <div class="step reveal"><div class="no">4</div><h3>Compose Email</h3><p>Write your email and add attachments.</p></div>
+      <div class="step reveal" style="transition-delay:.05s"><div class="no">5</div><h3>Click Send</h3><p>Review and click the send button.</p></div>
+      <div class="step reveal" style="transition-delay:.1s"><div class="no">6</div><h3>Delivered</h3><p>Emails are sent and delivery is tracked.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD OVERVIEW -->
+<section class="block" id="templates">
+  <div class="wrap dash-grid">
+    <div class="dash-copy reveal">
+      <span class="eyebrow" style="display:block;margin-bottom:14px">Dashboard Overview</span>
+      <h2>Powerful Dashboard for Better Insights</h2>
+      <ul class="dash-list">
+        <li><i data-lucide="check" width="20" height="20"></i> Get an overview of your email performance.</li>
+        <li><i data-lucide="check" width="20" height="20"></i> Track sent, delivered, failed, and pending emails.</li>
+        <li><i data-lucide="check" width="20" height="20"></i> View recent campaigns and group activity.</li>
+        <li><i data-lucide="check" width="20" height="20"></i> Beautiful charts and real-time analytics.</li>
+      </ul>
+      <a href="dashboard.html" class="btn btn-primary btn-lg">Explore Dashboard <i data-lucide="arrow-right" width="18" height="18"></i></a>
+    </div>
+    <div class="reveal mock" style="transition-delay:.1s">
+      <div class="mock-top">
+        <span class="d"></span><span class="d"></span><span class="d"></span>
+        <span class="url">app.emailsender.io/analytics</span>
+      </div>
+      <div class="mock-body">
+        <aside class="mock-side">
+          <div class="mb-brand"><span class="lg"><i data-lucide="send" width="12" height="12"></i></span> Email Sender</div>
+          <nav class="mock-nav">
+            <a><i data-lucide="layout-dashboard" width="15" height="15"></i> Dashboard</a>
+            <a><i data-lucide="pen-line" width="15" height="15"></i> Compose</a>
+            <a><i data-lucide="users" width="15" height="15"></i> Groups</a>
+            <a><i data-lucide="contact" width="15" height="15"></i> Contacts</a>
+            <a><i data-lucide="history" width="15" height="15"></i> History</a>
+            <a><i data-lucide="file-text" width="15" height="15"></i> Templates</a>
+            <a class="active"><i data-lucide="bar-chart-3" width="15" height="15"></i> Analytics</a>
+          </nav>
+        </aside>
+        <div class="mock-main">
+          <div class="mock-stats">
+            <div class="stat-card"><div class="lbl">Sent</div><div class="val">12,458</div></div>
+            <div class="stat-card"><div class="lbl">Delivered</div><div class="val accent">12,296</div></div>
+            <div class="stat-card"><div class="lbl">Pending</div><div class="val">98</div></div>
+            <div class="stat-card"><div class="lbl">Failed</div><div class="val">64</div></div>
+          </div>
+          <div class="mock-chart">
+            <div class="ch-head"><span class="t">Delivery Over Time</span><div class="legend"><span><span class="sw" style="background:var(--primary)"></span>Sent</span><span><span class="sw" style="background:oklch(80% 0.09 268)"></span>Delivered</span></div></div>
+            <div class="bars">
+              <div class="bar-col"><div class="bar sent" style="height:58%"></div><div class="bar deliv" style="height:52%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:72%"></div><div class="bar deliv" style="height:66%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:84%"></div><div class="bar deliv" style="height:80%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:62%"></div><div class="bar deliv" style="height:56%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:92%"></div><div class="bar deliv" style="height:88%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:74%"></div><div class="bar deliv" style="height:70%"></div></div>
+              <div class="bar-col"><div class="bar sent" style="height:96%"></div><div class="bar deliv" style="height:92%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="block steps">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Why Choose Us</span>
+      <h2>Built for Performance and Reliability</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why reveal"><div class="ic"><i data-lucide="rocket"></i></div><h3>High Delivery</h3><p>Industry leading delivery rate.</p></div>
+      <div class="why reveal" style="transition-delay:.05s"><div class="ic"><i data-lucide="mouse-pointer-click"></i></div><h3>Easy to Use</h3><p>Simple and intuitive user interface.</p></div>
+      <div class="why reveal" style="transition-delay:.1s"><div class="ic"><i data-lucide="lock"></i></div><h3>Secure &amp; Reliable</h3><p>Your data and emails are always safe.</p></div>
+      <div class="why reveal" style="transition-delay:.15s"><div class="ic"><i data-lucide="trending-up"></i></div><h3>Scalable</h3><p>Built to grow with your business needs.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="block tst">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Testimonials</span>
+      <h2>Trusted by Many</h2>
+    </div>
+    <div class="tst-grid">
+      <div class="quote reveal">
+        <div class="stars"><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i></div>
+        <p>"Email Sender made our college communication so easy. We can send important notices to thousands of students in seconds."</p>
+        <div class="who"><span class="av">PS</span><div><div class="nm">Priya Sharma</div><div class="rl">College Administrator</div></div></div>
+      </div>
+      <div class="quote reveal" style="transition-delay:.05s">
+        <div class="stars"><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i></div>
+        <p>"The group management and CSV import features save us hours of manual work every single week."</p>
+        <div class="who"><span class="av">RV</span><div><div class="nm">Rahul Verma</div><div class="rl">HR Manager</div></div></div>
+      </div>
+      <div class="quote reveal" style="transition-delay:.1s">
+        <div class="stars"><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i><i data-lucide="star" fill="currentColor" width="16" height="16"></i></div>
+        <p>"Beautiful dashboard and powerful analytics. Highly recommended for any team sending at scale."</p>
+        <div class="who"><span class="av">AP</span><div><div class="nm">Ankit Patel</div><div class="rl">IT Head</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="block" id="pricing">
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>Ready to Simplify Your Emails?</h2>
+      <p>Join thousands of organizations using Email Sender to send bulk emails effortlessly.</p>
+      <div class="cta-actions">
+        <a href="login.html" class="btn btn-primary btn-lg">Get Started Free</a>
+        <a href="login.html" class="btn btn-ghost btn-lg">Login Now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="block" id="contact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-item reveal">
+        <button class="faq-q">Can I import contacts via CSV? <i data-lucide="plus" width="22" height="22"></i></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Yes. Upload a CSV file and your contacts are imported into a group within seconds, with automatic column mapping for names and email addresses.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Is my data secure with Email Sender? <i data-lucide="plus" width="22" height="22"></i></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Absolutely. All emails are sent over secure SMTP connections and your contact data is encrypted at rest and in transit.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Can I schedule emails? <i data-lucide="plus" width="22" height="22"></i></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Yes. You can schedule campaigns for a future date and time, and Email Sender will deliver them automatically.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Is there a limit on sending emails? <i data-lucide="plus" width="22" height="22"></i></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Sending limits depend on your connected SMTP provider and plan. You can monitor usage in real time from the dashboard.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Can I track email delivery? <i data-lucide="plus" width="22" height="22"></i></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Yes. Track sent, delivered, pending, and failed emails in real time, along with delivery rates and campaign history.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Does it support attachments? <i data-lucide="plus" width="22" height="22"></i></button>
+        <div class="faq-a"><div class="faq-a-inner"><p>Yes. Attach PDFs, images, and documents to your emails and send them securely to your entire group.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand"><span class="logo"><i data-lucide="send" width="18" height="18"></i></span> Email Sender</a>
+        <p>A Bulk Email Management System that helps you connect, engage, and communicate with your audience efficiently.</p>
+      </div>
+      <div class="foot-col"><h4>Product</h4><ul><li><a href="#features">Features</a></li><li><a href="#how">How It Works</a></li><li><a href="#templates">Templates</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Updates</a></li></ul></div>
+      <div class="foot-col"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+      <div class="foot-col"><h4>Support</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Documentation</a></li><li><a href="#">Status</a></li></ul></div>
+    </div>
+    <div class="foot-bot">© 2026 Email Sender. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  // Icons
+  if(window.lucide) lucide.createIcons();
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(o){ o.classList.remove('open'); });
+      if(!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Scroll reveal
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+
+  // Mobile menu
+  var menuBtn = document.querySelector('.menu-btn');
+  var navLinks = document.querySelector('.nav-links');
+  if(menuBtn){
+    menuBtn.addEventListener('click', function(){
+      var shown = navLinks.style.display === 'flex';
+      navLinks.style.display = shown ? '' : 'flex';
+      navLinks.style.position = 'absolute';
+      navLinks.style.flexDirection = 'column';
+      navLinks.style.top = '68px';
+      navLinks.style.left = '0';
+      navLinks.style.right = '0';
+      navLinks.style.background = 'var(--surface)';
+      navLinks.style.padding = shown ? '' : '20px 24px';
+      navLinks.style.borderBottom = shown ? '' : '1px solid var(--border)';
+    });
+  }
+</script>
+</body>
+</html>
